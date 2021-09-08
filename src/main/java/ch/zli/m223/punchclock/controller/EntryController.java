@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import ch.zli.m223.punchclock.domain.Entry;
+import ch.zli.m223.punchclock.service.CategoryService;
 import ch.zli.m223.punchclock.service.EntryService;
 
 @Path("/entries")
@@ -18,6 +19,8 @@ public class EntryController {
 
     @Inject
     EntryService entryService;
+    @Inject
+    CategoryService categoryService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +44,8 @@ public class EntryController {
     public Entry update(Entry entry) {
         if (entryService.find(entry.getId()) == null)
             throw new BadRequestException("Entry not found");
+        if (categoryService.find(entry.getCategory().getName()) == null)
+            throw new BadRequestException("Category not found");
 
         return entryService.updateEntry(entry);
     }
