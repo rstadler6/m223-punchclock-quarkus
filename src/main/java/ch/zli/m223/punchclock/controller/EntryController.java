@@ -2,21 +2,23 @@ package ch.zli.m223.punchclock.controller;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import ch.zli.m223.punchclock.domain.Entry;
 import ch.zli.m223.punchclock.service.CategoryService;
 import ch.zli.m223.punchclock.service.EntryService;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
+@RequestScoped
+@RolesAllowed({"User"})
 @Path("/entries")
 public class EntryController {
-
+    @Inject
+    JsonWebToken jwt;
     @Inject
     EntryService entryService;
     @Inject
