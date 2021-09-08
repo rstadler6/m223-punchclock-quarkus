@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import ch.zli.m223.punchclock.domain.Comment;
 import ch.zli.m223.punchclock.domain.Entry;
 import ch.zli.m223.punchclock.service.CategoryService;
 import ch.zli.m223.punchclock.service.EntryService;
@@ -30,9 +31,17 @@ public class EntryController {
         return entryService.findAll();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Entry get(@PathParam("id") Long id) {
+        return entryService.find(id);
+    }
+
     @DELETE
+    @Path("/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String delete(Long id) {
+    public String delete(@PathParam("id") Long id) {
         if (entryService.tryDeleteEntry(id)) {
             return "delete successful";
         }
@@ -46,8 +55,8 @@ public class EntryController {
     public Entry update(Entry entry) {
         if (entryService.find(entry.getId()) == null)
             throw new BadRequestException("Entry not found");
-        if (categoryService.find(entry.getCategory().getName()) == null)
-            throw new BadRequestException("Category not found");
+        /*if (categoryService.find(entry.getCategory().getId()) == null)
+            throw new BadRequestException("Category not found");TODO*/
 
         return entryService.updateEntry(entry);
     }
@@ -57,5 +66,13 @@ public class EntryController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Entry add(Entry entry) {
         return entryService.createEntry(entry);
+    }
+
+    @POST
+    @Path("/{id}/comment")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void comment(@PathParam("id") Long id, Comment comment) {
+        entryService.comment(id, comment);
     }
 }

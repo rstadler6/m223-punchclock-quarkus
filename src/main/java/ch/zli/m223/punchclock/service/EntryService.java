@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import ch.zli.m223.punchclock.domain.Comment;
 import ch.zli.m223.punchclock.domain.Entry;
 
 @ApplicationScoped
@@ -47,5 +48,10 @@ public class EntryService {
 
     public Entry find(Long id) {
         return entityManager.find(Entry.class, id);
+    }
+
+    public void comment(Long entryId, Comment comment) {
+        var entry = entityManager.find(Entry.class, entryId);
+        //TODO
     }
 }

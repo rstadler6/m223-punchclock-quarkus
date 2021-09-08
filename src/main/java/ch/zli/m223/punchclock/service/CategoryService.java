@@ -27,11 +27,10 @@ public class CategoryService {
     }
 
     @Transactional
-    public boolean tryDeleteCategory(String name) {
-        var category = find(name);
-        System.out.println(category.getName());
-        if (category == null || category.getName().isBlank())
-            return false;
+    public boolean tryDeleteCategory(Long id) {
+        var category = find(id);
+        /*if (category == null || category.getName().isBlank())
+            return false;TODO*/
 
         entityManager.remove(category);
         return true;
@@ -43,7 +42,7 @@ public class CategoryService {
         return query.getResultList();
     }
 
-    public Category find(String name) {
-        return entityManager.find(Category.class, name);
+    public Category find(Long id) {
+        return entityManager.find(Category.class, id);
     }   // returns null??
 }

@@ -2,22 +2,24 @@ package ch.zli.m223.punchclock.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Entry {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private LocalDateTime checkIn;
-
     @Column(nullable = false)
     private LocalDateTime checkOut;
-
+    @ManyToOne
+    private User user;
     @ManyToOne
     private Category category;
+    @OneToMany
+    private List<Comment> comments;
 
     public User getUser() {
         return user;
@@ -26,9 +28,6 @@ public class Entry {
     public void setUser(User user) {
         this.user = user;
     }
-
-    @ManyToOne
-    private User user;
 
     public Long getId() {
         return id;

@@ -10,6 +10,10 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private boolean deactivated;
+    @Column(nullable = false)
+    private boolean admin;
 
     public String getPassword() {
         return password;

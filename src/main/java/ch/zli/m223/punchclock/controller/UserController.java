@@ -1,9 +1,12 @@
 package ch.zli.m223.punchclock.controller;
 
-import ch.zli.m223.punchclock.domain.Category;
 import ch.zli.m223.punchclock.domain.Entry;
+import ch.zli.m223.punchclock.domain.User;
 import ch.zli.m223.punchclock.service.CategoryService;
+import ch.zli.m223.punchclock.service.EntryService;
+import ch.zli.m223.punchclock.service.UserService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.graalvm.nativeimage.c.struct.AllowWideningCast;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -14,40 +17,31 @@ import java.util.List;
 
 @RequestScoped
 @RolesAllowed({"User"})
-@Path("/categories")
-public class CategoryController {
+@Path("/users")
+public class UserController {
     @Inject
     JsonWebToken jwt;
     @Inject
-    CategoryService categoryService;
+    UserService userService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Category> list() {
-        return categoryService.findAll();
+    public List<Entry> list() {
+        //TODO
     }
-
+    
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Category get(@PathParam("id") Long id) {
-        return categoryService.find(id);
+    public User get(@PathParam("id") Long id) {
+        return userService.find(id);
     }
 
-    @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
-    public String delete(Long id) {
-        if (categoryService.tryDeleteCategory(id)) {
-            return "delete successful";
-        }
-
-        throw new BadRequestException("delete failed");
-    }
-
-    @POST
+    @PUT
+    @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Category add(Category category) {
-       return categoryService.createCategory(category);
+    public User update(User user) {
+        return userService.updateUser(user);
     }
 }
