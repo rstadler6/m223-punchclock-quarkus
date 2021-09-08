@@ -25,11 +25,30 @@ public class EntryController {
         return entryService.findAll();
     }
 
+    @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
+    public String delete(Long id) {
+        if (entryService.tryDeleteEntry(id)) {
+            return "delete successful";
+        }
+
+        throw new BadRequestException("delete failed");
+    }
+
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Entry update(Entry entry) {
+        if (entryService.find(entry.getId()) == null)
+            throw new BadRequestException("Entry not found");
+
+        return entryService.updateEntry(entry);
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Entry add(Entry entry) {
-       return entryService.createEntry(entry);
+        return entryService.createEntry(entry);
     }
-
 }
