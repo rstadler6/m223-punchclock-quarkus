@@ -19,12 +19,14 @@ public class UserService {
 
     @Transactional 
     public User createUser(User user) {
-        // TODO
+        entityManager.persist(user);
+        return user;
     }
 
     @Transactional
     public User updateUser(User user) {
-        // TODO
+        entityManager.merge(user);
+        return user;
     }
 
     @SuppressWarnings("unchecked")
@@ -33,7 +35,7 @@ public class UserService {
         return query.getResultList();
     }
 
-    public User find(Long id) {
-        return entityManager.find(User.class, id);
+    public User find(String username) {
+        return entityManager.find(User.class, username);
     }
 }
