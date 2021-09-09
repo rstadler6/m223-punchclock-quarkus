@@ -1,12 +1,8 @@
 package ch.zli.m223.punchclock.controller;
 
-import ch.zli.m223.punchclock.domain.Entry;
 import ch.zli.m223.punchclock.domain.User;
-import ch.zli.m223.punchclock.service.CategoryService;
-import ch.zli.m223.punchclock.service.EntryService;
 import ch.zli.m223.punchclock.service.UserService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import org.graalvm.nativeimage.c.struct.AllowWideningCast;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;

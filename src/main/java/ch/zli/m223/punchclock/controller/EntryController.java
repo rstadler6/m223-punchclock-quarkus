@@ -1,5 +1,6 @@
 package ch.zli.m223.punchclock.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -105,6 +106,7 @@ public class EntryController {
     public void comment(@PathParam("id") Long id, Comment comment) {
         var user = userService.find(jwt.getName());
         comment.setUser(user);
+        comment.setTimestamp(LocalDateTime.now());
 
         var dbEntry = entryService.find(id);
 

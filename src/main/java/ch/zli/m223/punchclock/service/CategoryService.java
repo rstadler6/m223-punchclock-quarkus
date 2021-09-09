@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import javax.ws.rs.BadRequestException;
 import java.util.List;
 
 @ApplicationScoped
@@ -30,7 +29,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public boolean deleteCategory(Category category) {
+    public void deleteCategory(Category category) {
         entityManager.remove(category);
     }
 
