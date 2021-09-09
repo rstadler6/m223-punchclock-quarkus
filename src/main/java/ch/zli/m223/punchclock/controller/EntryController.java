@@ -12,6 +12,7 @@ import ch.zli.m223.punchclock.domain.Comment;
 import ch.zli.m223.punchclock.domain.Entry;
 import ch.zli.m223.punchclock.service.CategoryService;
 import ch.zli.m223.punchclock.service.EntryService;
+import ch.zli.m223.punchclock.service.UserService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
@@ -22,6 +23,8 @@ public class EntryController {
     JsonWebToken jwt;
     @Inject
     EntryService entryService;
+    @Inject
+    UserService userService;
     @Inject
     CategoryService categoryService;
 
@@ -40,23 +43,43 @@ public class EntryController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String delete(@PathParam("id") Long id) {
-        if (entryService.tryDeleteEntry(id)) {
-            return "delete successful";
+    public void delete(@PathParam("id") Long id) {
+        var dbEntry = entryService.find(id);
+
+        if (dbEntry == null) {
+            throw new BadRequestException("Entry not found");
         }
 
-        throw new BadRequestException("delete failed");
+        if (!jwt.getGroups().contains("Admin")) {
+            var user = userService.find(jwt.getName());
+
+            if (!dbEntry.getUser().equals(user))
+                throw new ForbiddenException();
+        }
+
+        entryService.deleteEntry(dbEntry);
     }
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Entry update(Entry entry) {
-        if (entryService.find(entry.getId()) == null)
+        var dbEntry = entryService.find(entry.getId());
+
+        if (entryService.find(entry.getId()) == null) {
             throw new BadRequestException("Entry not found");
-        /*if (categoryService.find(entry.getCategory().getId()) == null)
-            throw new BadRequestException("Category not found");TODO*/
+        }
+
+        if (!jwt.getGroups().contains("Admin")) {
+            var user = userService.find(jwt.getName());
+
+            if (!dbEntry.getUser().equals(user))
+                throw new ForbiddenException();
+        }
+
+        if (categoryService.find(entry.getCategory().getId()) == null) {
+            throw new BadRequestException("Category not found");
+        }
 
         return entryService.updateEntry(entry);
     }
@@ -65,6 +88,13 @@ public class EntryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Entry add(Entry entry) {
+        var user = userService.find(jwt.getName());
+        entry.setUser(user);
+
+        if (categoryService.find(entry.getCategory().getId()) == null) {
+            throw new BadRequestException("Category not found");
+        }
+
         return entryService.createEntry(entry);
     }
 
@@ -73,6 +103,15 @@ public class EntryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public void comment(@PathParam("id") Long id, Comment comment) {
-        entryService.comment(id, comment);
+        var user = userService.find(jwt.getName());
+        comment.setUser(user);
+
+        var dbEntry = entryService.find(id);
+
+        if (dbEntry == null) {
+            throw new BadRequestException("Entry not found");
+        }
+
+        entryService.comment(dbEntry, comment);
     }
 }

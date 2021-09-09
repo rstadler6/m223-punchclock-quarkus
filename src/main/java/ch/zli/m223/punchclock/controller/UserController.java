@@ -26,8 +26,8 @@ public class UserController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Entry> list() {
-        //TODO
+    public List<User> list() {
+        return userService.findAll();
     }
     
     @GET
