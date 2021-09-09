@@ -31,11 +31,14 @@ public class AuthService {
         entityManager.persist(user);
     }
 
+    public boolean userExists(String username) {
+        return entityManager.find(User.class, username) != null;
+    }
+
+
     public boolean validateCredentials(User loginUser) {
         var user = entityManager.find(User.class, loginUser.getUsername());
 
-        if (user == null || !user.getPassword().equals(loginUser.getPassword()))
-            return false;
-        return true;
+        return user != null && user.getPassword().equals(loginUser.getPassword());
     }
 }

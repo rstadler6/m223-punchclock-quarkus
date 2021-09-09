@@ -18,6 +18,8 @@ public class AuthController {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(User user) {
+        if (authService.userExists(user.getUsername()))
+            throw new BadRequestException();
         authService.createUser(user);
     }
 
