@@ -2,15 +2,12 @@ package ch.zli.m223.punchclock.service;
 
 import ch.zli.m223.punchclock.domain.User;
 import io.smallrye.jwt.build.Jwt;
-import org.eclipse.microprofile.jwt.Claims;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
-import java.util.Arrays;
-import java.util.HashSet;
 
 @ApplicationScoped
 public class AuthService {
@@ -18,9 +15,13 @@ public class AuthService {
     private EntityManager entityManager;
 
     public String generateToken(User user) {
+        var groups = "User";
+        if (user.isAdmin())
+            groups += ", Admin";
+
         return Jwt.issuer("http://localhost:8080")
                         .upn(user.getUsername())
-                        .groups("User")
+                        .groups(groups)
                         .sign();
     }
 

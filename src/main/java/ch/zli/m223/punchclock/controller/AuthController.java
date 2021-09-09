@@ -1,9 +1,8 @@
 package ch.zli.m223.punchclock.controller;
 
-
-import ch.zli.m223.punchclock.domain.Entry;
 import ch.zli.m223.punchclock.domain.User;
 import ch.zli.m223.punchclock.service.AuthService;
+import ch.zli.m223.punchclock.service.UserService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -13,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 public class AuthController {
     @Inject
     AuthService authService;
+    @Inject
+    UserService userService;
 
     @POST
     @Path("/register")
@@ -29,7 +30,7 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     public String login(User user) {
         if (authService.validateCredentials(user))
-            return authService.generateToken(user);
+            return authService.generateToken(userService.find(user.getUsername()));
         throw new BadRequestException();
     }
 }
