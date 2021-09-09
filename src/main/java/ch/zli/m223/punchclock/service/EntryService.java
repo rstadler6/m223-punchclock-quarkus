@@ -31,13 +31,8 @@ public class EntryService {
     }
 
     @Transactional
-    public boolean tryDeleteEntry(Long id) {
-        var entity = find(id);
-        if (entity == null)
-            return false;
-
-        entityManager.remove(entity);
-        return true;
+    public void deleteEntry(Entry entry) {
+        entityManager.remove(entry);
     }
 
     @SuppressWarnings("unchecked")
@@ -50,8 +45,11 @@ public class EntryService {
         return entityManager.find(Entry.class, id);
     }
 
-    public void comment(Long entryId, Comment comment) {
-        var entry = entityManager.find(Entry.class, entryId);
-        //TODO
+    public void comment(Entry entry, Comment comment) {
+        var comments = entry.getComments();
+        comments.add(comment);
+        entry.setComments(comments);
+
+        entityManager.merge(entry);
     }
 }
