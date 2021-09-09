@@ -31,10 +31,10 @@ public class UserController {
     }
     
     @GET
-    @Path("/{id}")
+    @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User get(@PathParam("id") Long id) {
-        return userService.find(id);
+    public User get(@PathParam("username") String username) {
+        return userService.find(username);
     }
 
     @PUT
