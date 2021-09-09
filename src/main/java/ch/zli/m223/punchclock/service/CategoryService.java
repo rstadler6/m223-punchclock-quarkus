@@ -19,21 +19,19 @@ public class CategoryService {
 
     @Transactional 
     public Category createCategory(Category category) {
-        if (entityManager.contains(category))
-            throw new BadRequestException("Category already exists");
-
         entityManager.persist(category);
         return category;
     }
 
     @Transactional
-    public boolean tryDeleteCategory(Long id) {
-        var category = find(id);
-        /*if (category == null || category.getName().isBlank())
-            return false;TODO*/
+    public Category updateCategory(Category category) {
+        entityManager.merge(category);
+        return category;
+    }
 
+    @Transactional
+    public boolean deleteCategory(Category category) {
         entityManager.remove(category);
-        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -44,5 +42,9 @@ public class CategoryService {
 
     public Category find(Long id) {
         return entityManager.find(Category.class, id);
-    }   // returns null??
+    }
+
+    public Category find(String name) {
+        return entityManager.find(Category.class, name);
+    }
 }

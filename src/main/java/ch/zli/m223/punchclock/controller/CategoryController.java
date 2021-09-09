@@ -13,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @RequestScoped
-@RolesAllowed({"User"})
 @Path("/categories")
 public class CategoryController {
     @Inject
@@ -22,12 +21,14 @@ public class CategoryController {
     CategoryService categoryService;
 
     @GET
+    @RolesAllowed({"User"})
     @Produces(MediaType.APPLICATION_JSON)
     public List<Category> list() {
         return categoryService.findAll();
     }
 
     @GET
+    @RolesAllowed({"User"})
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Category get(@PathParam("id") Long id) {
@@ -35,19 +36,43 @@ public class CategoryController {
     }
 
     @DELETE
+    @RolesAllowed({"Admin"})
     @Produces(MediaType.TEXT_PLAIN)
-    public String delete(Long id) {
-        if (categoryService.tryDeleteCategory(id)) {
-            return "delete successful";
+    public void delete(Long id) {
+        var dbCategory = categoryService.find(id);
+
+        if (dbCategory == null) {
+            throw new BadRequestException("Entry not found");
         }
 
-        throw new BadRequestException("delete failed");
+        if (!jwt.getGroups().contains("Admin")) {
+            throw new ForbiddenException();
+        }
+
+        categoryService.deleteCategory(dbCategory);
     }
 
     @POST
+    @RolesAllowed({"Admin"})
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Category add(Category category) {
+       if (categoryService.find(category.getId()) != null || categoryService.find(category.getName()) != null) {
+           throw new BadRequestException();
+       }
+
        return categoryService.createCategory(category);
+    }
+
+    @PUT
+    @RolesAllowed({"Admin"})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Category update(Category category) {
+        if (categoryService.find(category.getId()) == null) {
+            throw new BadRequestException();
+        }
+
+        return categoryService.updateCategory(category);
     }
 }

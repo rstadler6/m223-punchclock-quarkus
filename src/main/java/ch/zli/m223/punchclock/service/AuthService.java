@@ -35,7 +35,6 @@ public class AuthService {
         return entityManager.find(User.class, username) != null;
     }
 
-
     public boolean validateCredentials(User loginUser) {
         var user = entityManager.find(User.class, loginUser.getUsername());
 
