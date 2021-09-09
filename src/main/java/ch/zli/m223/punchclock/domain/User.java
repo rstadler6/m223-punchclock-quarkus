@@ -30,4 +30,20 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public boolean isDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(boolean deactivated) {
+        this.deactivated = deactivated;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 }
