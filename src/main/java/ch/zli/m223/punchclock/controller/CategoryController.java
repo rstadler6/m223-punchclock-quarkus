@@ -74,7 +74,7 @@ public class CategoryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Category add(Category category) {
-       if (categoryService.find(category.getId()) != null || categoryService.find(category.getName()) != null) {
+       if (categoryService.categoryExists(category.getName())) {
            throw new BadRequestException();
        }
 

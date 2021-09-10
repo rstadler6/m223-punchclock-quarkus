@@ -43,7 +43,7 @@ public class CategoryService {
         return entityManager.find(Category.class, id);
     }
 
-    public Category find(String name) {
-        return entityManager.find(Category.class, name);
+    public boolean categoryExists(String name) {
+        return entityManager.createQuery("SELECT count(*) FROM Category where name = " + name).getFirstResult() != 0;
     }
 }

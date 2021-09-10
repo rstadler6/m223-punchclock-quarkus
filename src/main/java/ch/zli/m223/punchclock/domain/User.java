@@ -11,9 +11,9 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
-    private boolean deactivated;
+    private boolean deactivated = false;
     @Column(nullable = false)
-    private boolean admin;
+    private boolean admin = false;
 
     public String getPassword() {
         return password;

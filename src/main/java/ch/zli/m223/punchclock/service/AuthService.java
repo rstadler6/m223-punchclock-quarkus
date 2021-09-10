@@ -8,6 +8,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @ApplicationScoped
 public class AuthService {
@@ -15,9 +18,9 @@ public class AuthService {
     private EntityManager entityManager;
 
     public String generateToken(User user) {
-        var groups = "User";
+        var groups = new HashSet<>(List.of("User"));
         if (user.isAdmin())
-            groups += ", Admin";
+            groups.add("Admin");
 
         return Jwt.issuer("http://localhost:8080")
                         .upn(user.getUsername())

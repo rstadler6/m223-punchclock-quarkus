@@ -16,7 +16,7 @@ public class Entry {
     private LocalDateTime checkOut;
     @ManyToOne
     private User user;
-    @ManyToOne
+    @ManyToOne(optional = true)
     private Category category;
     @OneToMany
     private List<Comment> comments;
