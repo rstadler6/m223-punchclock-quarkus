@@ -19,6 +19,10 @@ public class CategoryController {
     @Inject
     CategoryService categoryService;
 
+    /**
+     * get all categories
+     * @return list of all categories
+     */
     @GET
     @RolesAllowed({"User"})
     @Produces(MediaType.APPLICATION_JSON)
@@ -26,6 +30,11 @@ public class CategoryController {
         return categoryService.findAll();
     }
 
+    /**
+     * gets single category
+     * @param id: id of category to get
+     * @return category
+     */
     @GET
     @RolesAllowed({"User"})
     @Path("/{id}")
@@ -34,6 +43,10 @@ public class CategoryController {
         return categoryService.find(id);
     }
 
+    /**
+     * deletes category
+     * @param id: id of category to delete
+     */
     @DELETE
     @RolesAllowed({"Admin"})
     @Produces(MediaType.TEXT_PLAIN)
@@ -51,6 +64,11 @@ public class CategoryController {
         categoryService.deleteCategory(dbCategory);
     }
 
+    /**
+     * creates new category
+     * @param category: category to create
+     * @return created category
+     */
     @POST
     @RolesAllowed({"Admin"})
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +81,11 @@ public class CategoryController {
        return categoryService.createCategory(category);
     }
 
+    /**
+     * updates category
+     * @param category: category to update
+     * @return updated category
+     */
     @PUT
     @RolesAllowed({"Admin"})
     @Produces(MediaType.APPLICATION_JSON)

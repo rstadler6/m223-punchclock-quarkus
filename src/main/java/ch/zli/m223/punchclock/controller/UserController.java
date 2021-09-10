@@ -20,12 +20,21 @@ public class UserController {
     @Inject
     UserService userService;
 
+    /**
+     * get all users
+     * @return list of all users
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> list() {
         return userService.findAll();
     }
-    
+
+    /**
+     * get single user
+     * @param username: username of user to get
+     * @return user
+     */
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,6 +42,11 @@ public class UserController {
         return userService.find(username);
     }
 
+    /**
+     * update user
+     * @param user: user to update
+     * @return updated user
+     */
     @PUT
     @RolesAllowed("Admin")
     @Produces(MediaType.APPLICATION_JSON)

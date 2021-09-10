@@ -29,12 +29,21 @@ public class EntryController {
     @Inject
     CategoryService categoryService;
 
+    /**
+     * gets all entries
+     * @return list of all entries
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Entry> list() {
         return entryService.findAll();
     }
 
+    /**
+     * gets single entry
+     * @param id: id of entry to get
+     * @return entry
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,6 +51,10 @@ public class EntryController {
         return entryService.find(id);
     }
 
+    /**
+     * deletes entry
+     * @param id: id of entry to delete
+     */
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Long id) {
@@ -61,6 +74,11 @@ public class EntryController {
         entryService.deleteEntry(dbEntry);
     }
 
+    /**
+     * updates entry
+     * @param entry: entry to update
+     * @return updated entry
+     */
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -85,20 +103,31 @@ public class EntryController {
         return entryService.updateEntry(entry);
     }
 
+    /**
+     * creates entry
+     * @param entry: entry to create
+     * @return created entry
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Entry add(Entry entry) {
-        var user = userService.find(jwt.getName());
+        System.out.println(jwt.getName());
+        var user = userService.find(jwt.getName().trim());
         entry.setUser(user);
 
-        if (categoryService.find(entry.getCategory().getId()) == null) {
+        if (entry.getCategory() != null && categoryService.find(entry.getCategory().getId()) == null) {
             throw new BadRequestException("Category not found");
         }
 
         return entryService.createEntry(entry);
     }
 
+    /**
+     * adds comment to entry
+     * @param id: id of entry to comment
+     * @param comment: comment to add
+     */
     @POST
     @Path("/{id}/comment")
     @Produces(MediaType.APPLICATION_JSON)
