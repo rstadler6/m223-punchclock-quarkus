@@ -49,8 +49,9 @@ public class CategoryController {
      */
     @DELETE
     @RolesAllowed({"Admin"})
+    @Path("/{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public void delete(Long id) {
+    public void delete(@PathParam("id") Long id) {
         var dbCategory = categoryService.find(id);
 
         if (dbCategory == null) {
@@ -74,11 +75,12 @@ public class CategoryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Category add(Category category) {
-       if (categoryService.categoryExists(category.getName())) {
+        category.setId(null);
+        if (categoryService.categoryExists(category.getName())) {
            throw new BadRequestException();
-       }
+        }
 
-       return categoryService.createCategory(category);
+        return categoryService.createCategory(category);
     }
 
     /**

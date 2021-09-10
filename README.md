@@ -19,3 +19,7 @@ Datenquelle: jdbc:h2:mem:punchclock
 Benutzername: zli
 Passwort: zli
 
+
+Bemerkungen:
+Bei der User-Entität kann der Benutzername nicht verändert werden, da er als Primary Key verwendet wird.
+

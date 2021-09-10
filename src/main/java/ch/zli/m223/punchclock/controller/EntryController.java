@@ -30,6 +30,17 @@ public class EntryController {
     CategoryService categoryService;
 
     /**
+     * gets special entries (category = special)
+     * @return list of all special entries
+     */
+    @GET
+    @Path("/special")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Entry> listSpecial() {
+        return entryService.findSpecial();
+    }
+
+    /**
      * gets all entries
      * @return list of all entries
      */

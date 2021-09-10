@@ -47,4 +47,18 @@ public class AuthController {
             return authService.generateToken(userService.find(user.getUsername()));
         throw new BadRequestException();
     }
+
+    /**
+     * get if user is admin
+     * @param username: username to check admin for
+     * @return boolean if user is admin
+     */
+    @GET
+    @Path("/adminCheck/{username}")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @PermitAll
+    public boolean adminCheck(@PathParam("username") String username) {
+        return userService.find(username).isAdmin();
+    }
 }

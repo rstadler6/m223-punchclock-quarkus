@@ -41,6 +41,11 @@ public class EntryService {
         return query.getResultList();
     }
 
+    @SuppressWarnings("unchecked")
+    public List<Entry> findSpecial() {
+        return entityManager.createQuery("SELECT * FROM Entry GROUP BY (category) HAVING category = special").getResultList();
+    }
+
     public Entry find(Long id) {
         return entityManager.find(Entry.class, id);
     }
